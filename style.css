@@ -32,6 +32,18 @@ h2 {
     outline: none;
 }  
 
+input {
+    background-color: #444059;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 9px;
+    height: 40px;
+    width: 153px;
+    margin-right: 1px;
+    color: #fff;
+}
+
 #publish-btn {
     display: block;
     margin: 0 auto;
@@ -50,11 +62,11 @@ h2 {
 }
 
 span {
-    font-family: "Josefin Sans", sans-serif;
-    color: #fff;
+    font-family: "Inter", sans-serif;
+    color: black;
     margin-top: 24px;
     font-weight: 700;
-    font-size: 18px;
+    font-size: 14px;
     margin-bottom: 19px;
 }
 
@@ -66,8 +78,62 @@ span {
     line-height: 15px;
     padding: 5px;
     max-width: 317px;
-    font-size: 12px;
     font-weight: 400;
     text-align: left;
-    padding: 13px;
+    padding: 14px;
+    width: 317px;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* justify-content: flex-start; */
+    gap: 8px;
+}
+
+.endorsement-section-empty {
+    color: #fff;
+    font-family: "Inter";
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+.receiver {
+    margin-top: 2px;
+    font-weight: 700;
+    font-size: 14px;
+    font-family: "Inter";
+    margin-bottom: 6px;
+}
+
+.sender {
+    margin-bottom: 0px;
+    font-weight: 700;
+    font-size: 13px;
+    font-family: "Inter";
+    margin-top: 7px;
+}
+
+.container {
+    display: flex;
+    align-items: end;
+    justify-content: space-between
+}
+
+.heart-icon {
+    width: 15px;
+    height: 15px;
+    margin-top: 1px;
+    /* justify-self: end; */
+    /* justify-content: space-between; */
+    cursor: pointer;
+    margin-right: 3px;
+    /* text-align: right; */
+    /* display: flex; */
+    /* align-self: end; */
+}
+
+.likes-container {
+    font-weight: 800;
+    /* display: flex; */
+    align-items: end;
 }

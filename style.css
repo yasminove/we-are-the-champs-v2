@@ -61,6 +61,15 @@ input {
     cursor: pointer;
 }
 
+.endorsement-span {
+    font-family: "Josefin Sans", sans-serif;
+    color: #fff;
+    margin-top: 24px;
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 19px;
+}
+
 span {
     font-family: "Inter", sans-serif;
     color: black;
@@ -136,4 +145,13 @@ span {
     font-weight: 800;
     /* display: flex; */
     align-items: end;
+}
+
+.empty-heart {
+    /* color: #fff; */
+} 
+
+.filled-heart {
+    color: #04131C;
+    width: 50px
 }

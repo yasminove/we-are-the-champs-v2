@@ -38,7 +38,9 @@ onValue(referenceInDB, function (snapshot) {
             <div class="container">
                 <h3 class="sender">From ${endorsementObj.sender}</h3>
                 <div class="likes-container">
-                    <img data-key=${key} id="heart" class="heart-icon" src="assets/heart.png">
+                    <span class="${localStorage.getItem(key) ? 'filled-heart' : 'empty-heart'} likeSpan heart-icon" data-key=${key} id="heart">
+                        ${localStorage.getItem(key) ? '&#x2665;' : '&#x2661;'} 
+                    </span>
                     <span>${endorsementObj.likes ? endorsementObj.likes : 0}</span>
                 </div>
             </div>
@@ -50,32 +52,43 @@ onValue(referenceInDB, function (snapshot) {
         heartIcon.forEach(icon => {
             icon.addEventListener('click', function (event) {
                 const endorsementKey = event.target.dataset.key;
-                console.log(endorsementKey, 'endorsementKey');
+                // console.log(endorsementKey, 'endorsementKey');
+                console.log(event.target.nextElementSibling, 'event.target');
                 let likesCountElement = event.target.nextElementSibling;
-                console.log(likesCountElement.textContent, 'likesCountElement.textContent');
+
+                // console.log(likesCountElement.textContent, 'likesCountElement.textContent');
                 let currentLikes = parseInt(likesCountElement.textContent, 10);
+                // console.log(event.target.textContent, 'event.target.textContent.split');
+                console.log(currentLikes, 'currentLikes');
                 let endorsementRef = ref(database, `endorsements/${endorsementKey}`);
                 if (localStorage.getItem(endorsementKey)) {
                     update(endorsementRef, {
                         likes: currentLikes - 1
+                    }).then(() => {
+                        localStorage.removeItem(endorsementKey);
+                        likesCountElement.textContent = currentLikes - 1;
+                        event.target.innerHTML = '&#x2661; ${currentLikes - 1}'
+                        event.target.classList.remove('filled-heart');
+                        event.target.classList.add('empty-heart');
                     })
 
-                    localStorage.removeItem(endorsementKey);
-                    likesCountElement.textContent = currentLikes - 1;
-                    event.target.src = 'assets/heart.png'
 
                 } else {
-                    update(endorsementRef, { likes: currentLikes + 1 })
-                    localStorage.setItem(endorsementKey, true)
-                    event.target.src = 'assets/heart-filled.png'
-                    console.log(event.target.src, 'event.target.src');
-                    console.log(event.target);
+                    update(endorsementRef, { likes: currentLikes + 1 }).then(() => {
+                        localStorage.setItem(endorsementKey, true)
+                        event.target.innerHTML = '&#x2665; ${currentLikes + 1} '
+                        this.classList.remove('empty-heart');
+                        this.classList.add('filled-heart');
+                    })
+                    // event.target.src = 'assets/heart-filled.png'
+                    // console.log(event.target.src, 'event.target.src');
+                    // console.log(event.target);
 
-                    event.target.style.display = 'none';
-                    setTimeout(() => {
-                        event.target.src = 'assets/heart-filled.png';
-                        event.target.style.display = 'block';
-                    }, 50);
+                    // event.target.style.display = 'none';
+                    // setTimeout(() => {
+                    //     event.target.src = 'assets/heart-filled.png';
+                    //     event.target.style.display = 'block';
+                    // }, 50);
                 }
             })
         })

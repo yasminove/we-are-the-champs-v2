@@ -24,7 +24,8 @@ onValue(referenceInDB, function (snapshot) {
 
     if (snapshot.exists()) {
 
-        const endorsementsInDB = Object.entries(snapshot.val());
+        let endorsementsInDB = Object.entries(snapshot.val());
+        endorsementsInDB = endorsementsInDB.reverse()
 
         for (let i = 0; i < endorsementsInDB.length; i++) {
 
@@ -38,60 +39,15 @@ onValue(referenceInDB, function (snapshot) {
             <div class="container">
                 <h3 class="sender">From ${endorsementObj.sender}</h3>
                 <div class="likes-container">
-                    <span class="${localStorage.getItem(key) ? 'filled-heart' : 'empty-heart'} likeSpan heart-icon" data-key=${key} id="heart">
-                        ${localStorage.getItem(key) ? '&#x2665;' : '&#x2661;'} 
-                    </span>
-                    <span>${endorsementObj.likes ? endorsementObj.likes : 0}</span>
+                    <i data-like=${key} class="${endorsementObj.isLiked ? 'bx bxs-heart' : 'bx bx-heart'}"></i>
+                    <span id="likes-num">${endorsementObj.likes ? endorsementObj.likes : 0}</span>
                 </div>
             </div>
             `;
-            endorsementSection.append(endorsement);
-            
+            addLikes(key, endorsementObj)
+            endorsementSection.append(endorsement);    
         }
-        let heartIcon = document.querySelectorAll('.heart-icon');
-        heartIcon.forEach(icon => {
-            icon.addEventListener('click', function (event) {
-                const endorsementKey = event.target.dataset.key;
-                // console.log(endorsementKey, 'endorsementKey');
-                console.log(event.target.nextElementSibling, 'event.target');
-                let likesCountElement = event.target.nextElementSibling;
-
-                // console.log(likesCountElement.textContent, 'likesCountElement.textContent');
-                let currentLikes = parseInt(likesCountElement.textContent, 10);
-                // console.log(event.target.textContent, 'event.target.textContent.split');
-                console.log(currentLikes, 'currentLikes');
-                let endorsementRef = ref(database, `endorsements/${endorsementKey}`);
-                if (localStorage.getItem(endorsementKey)) {
-                    update(endorsementRef, {
-                        likes: currentLikes - 1
-                    }).then(() => {
-                        localStorage.removeItem(endorsementKey);
-                        likesCountElement.textContent = currentLikes - 1;
-                        event.target.innerHTML = '&#x2661; ${currentLikes - 1}'
-                        event.target.classList.remove('filled-heart');
-                        event.target.classList.add('empty-heart');
-                    })
-
-
-                } else {
-                    update(endorsementRef, { likes: currentLikes + 1 }).then(() => {
-                        localStorage.setItem(endorsementKey, true)
-                        event.target.innerHTML = '&#x2665; ${currentLikes + 1} '
-                        this.classList.remove('empty-heart');
-                        this.classList.add('filled-heart');
-                    })
-                    // event.target.src = 'assets/heart-filled.png'
-                    // console.log(event.target.src, 'event.target.src');
-                    // console.log(event.target);
-
-                    // event.target.style.display = 'none';
-                    // setTimeout(() => {
-                    //     event.target.src = 'assets/heart-filled.png';
-                    //     event.target.style.display = 'block';
-                    // }, 50);
-                }
-            })
-        })
+        
     } else {
         endorsementSection.innerHTML = "No endorsements yet..."
         endorsementSection.classList.add('endorsement-section-empty')
@@ -103,12 +59,28 @@ publishBtn.addEventListener('click', function () {
         text: endorsementText.value,
         sender: sender.value,
         receiver: receiver.value,
-        likes: 1
+        likes: 0,
+        isLiked: false
     }
 
-    console.log(endorsement, 'endorsement')
     push(referenceInDB, endorsement)
     endorsementText.value = ''
     sender.value = ''
     receiver.value = ''
 })
+
+function addLikes(id, obj) {
+    document.addEventListener('click', (e) => {
+        if (e.target.dataset.like === id) {
+            
+            let exactLocation = ref(database, `endorsements/${id}`)
+            update(exactLocation, { isLiked: !obj.isLiked });
+            console.log(obj, 'obj');
+            if (obj.isLiked) {
+                update(exactLocation, { likes: obj.likes - 1 } )
+            } else if (!obj.isLiked) {
+                update(exactLocation, { likes: obj.likes + 1 } )
+            }
+        }
+    })
+}

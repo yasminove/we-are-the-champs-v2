@@ -9,6 +9,10 @@ body {
     flex-direction: column;
 }
 
+i {
+    background-color: #fff;
+}
+
 img {
     margin-top: 51px;
 }

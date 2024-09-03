@@ -13,7 +13,7 @@ const appSettings = {
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 
-const referenceInDB = ref(database, 'endorsements')
+const referenceInDB = ref(database, 'endorsements-v2')
 
 const endorsementSection = document.getElementById('endorsements-section');
 
@@ -39,7 +39,7 @@ onValue(referenceInDB, function (snapshot) {
             <div class="container">
                 <h3 class="sender">From ${endorsementObj.sender}</h3>
                 <div class="likes-container">
-                    <i data-like=${key} class="${endorsementObj.isLiked ? 'bx bxs-heart' : 'bx bx-heart'}"></i>
+                    <i id="heart" data-like=${key} class="${endorsementObj.isLiked ? 'bx bxs-heart' : 'bx bx-heart'}"></i>
                     <span id="likes-num">${endorsementObj.likes ? endorsementObj.likes : 0}</span>
                 </div>
             </div>
@@ -72,10 +72,8 @@ publishBtn.addEventListener('click', function () {
 function addLikes(id, obj) {
     document.addEventListener('click', (e) => {
         if (e.target.dataset.like === id) {
-            
-            let exactLocation = ref(database, `endorsements/${id}`)
+            let exactLocation = ref(database, `endorsements-v2/${id}`)
             update(exactLocation, { isLiked: !obj.isLiked });
-            console.log(obj, 'obj');
             if (obj.isLiked) {
                 update(exactLocation, { likes: obj.likes - 1 } )
             } else if (!obj.isLiked) {
